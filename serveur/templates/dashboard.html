@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<!-- <nav class="header">
+
+    <a href="">Ajouter un film</a>
+</nav> -->
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="films">
+    
+    <ul>
+        <li class="card">
+            <h4>Billet Acheter aujoud'hui: {{ data['buyToday'] }}</h4>
+            <br>
+            <p>Nb total de billet unitaire: {{ data['totalBunit'] }}</p>
+            <p>Nb total de billet journalier: {{ data['totalBjour'] }}</p>
+            <p>Nb de billet valides: {{ data['totalValid'] }} </p>
+        </li>
+    </ul>
+
+    <p>{{ message }}</p>
+</section>
+
+</form>
+
+<script>
+    // Fonction pour recharger la page toutes les 5 secondes
+    function reloadPage() {
+        location.reload(true); // Le paramètre true force le rechargement depuis le serveur, en ignorant le cache
+    }
+    
+    // Appel à la fonction reloadPage toutes les 5 secondes (5000 millisecondes)
+    setInterval(reloadPage, 10000);
+</script>
+    {% endblock %}
