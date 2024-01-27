@@ -7,21 +7,18 @@
 </head>
 <body>
     <h1>QR Code Scanner</h1>
-
+        
+    {{ message }}
   
     {%  for qr in files %}
 
-
     <form method="post" action="{{ url_for('decode_qr', qr=qr) }}">
-       
         <img src="{{url_for('get_image',  filename=qr) }}">
-        
-        <label for="qr">{{ qr }}</label>
-        <input type="submit" value="Submit">
+        <label for="qr">Billet {{ qr[5:9] }}</label>
+        <input type="submit" value="Utiliser">
     </form>
 
     {% endfor %}
-
-  
+ 
 </body>
 </html>

@@ -33,24 +33,6 @@ services:
     expose:
       - "5000"
 
-  # serveur-mosquitto:
-  #   image: serveur-mosquitto:0.1
-  #   build:       
-  #     context: .
-  #     dockerfile: ./dockerfile-mosquitto
-  #   networks:
-  #     achat_titres_mynetwork:
-  #       ipv4_address: 172.20.0.10
-  #   ports:
-  #     - "1883:1883"
-  #     - "5006:5000"
-  #   volumes:
-  #     - ./serveur:/app
-  #   expose:
-  #     - "1883"
-  #     - "5000"
-
-#### ok ####
   mosquitto:
     image: eclipse-mosquitto
     hostname: mosquitto
@@ -69,8 +51,6 @@ services:
       - "1883"
       - "9001"
 
-
-#### ok ####
   scanner-qrcode:
     image: scanner-qrcode:0.1
     build:       
