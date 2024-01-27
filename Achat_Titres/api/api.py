@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, flash
-from werkzeug.security import check_password_hash, generate_password_hash
 import jwt
 import datetime
 import requests
@@ -8,12 +7,11 @@ import qrcode
 
 
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
 
-# Fonction pour générer le token JWT
+# Token generator
 def generate_token(user_id):
     payload = {
         'user_id': user_id,
@@ -24,34 +22,12 @@ def generate_token(user_id):
 
 
 #***************************     mongodb       **************************
-
 myclient = pymongo.MongoClient('mongodb://172.20.0.1', 27017, username="root", password='1toto;2')
 mydb = myclient["Billetterie"]
 
 
-# print(mydb.list_collection_names())
 
-
-#***************************     USERS       **************************
-
-#User Routes
-# @app.route('/users', methods=['GET'])
-# def get_users():
-#     cursor.execute('SELECT * FROM users')
-#     users = cursor.fetchall()
-#     return jsonify({'users': users})
-
-
-# @app.route('/user/<user_id>', methods=['GET'])
-# def get_user(user_id):
-#     cursor.execute('SELECT * FROM users WHERE username = ?', (user_id,))
-#     user = cursor.fetchone()
-#     if user:
-#         return jsonify({'user': user})
-#     else:
-#         return jsonify({'message': 'User not found'}), 404
-
-
+# sign up route
 @app.route('/adduser', methods=['POST'])
 def create_user():
     if request.method == 'POST':
@@ -63,36 +39,14 @@ def create_user():
         mycol = mydb["users"]
         mycol.create_index("username", unique=True)
         data1 = {"username": username , "email": email , "password" : password}
-        # data1 = {"username": username , "email": email , "password" : password, "Bunit": 0, "Bjour":0}
         mycol.insert_one(data1)
         
-       
-        # cursor.execute('SELECT users.username FROM users WHERE username = ?',(username,))
-        # userdb = cursor.fetchone()
-
-        # if userdb == None:
-        #     userdb= ''
-        # else:
-        #     userdb = userdb[0]
-           
-        # cursor.execute('SELECT email FROM users')
-        # emaildb = cursor.fetchall()
-        # for i in emaildb:
-        #     if email in i[0]:
-        #         email = 'emailUsed'
-        #         break
-            
-        # if userdb != username and email != 'emailUsed':
-        #     cursor.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, generate_password_hash(password)),)
-        #     conn.commit()
-     
         return jsonify({'message': 'Utilisateur créé'}),201
     else:
         return jsonify({'message': 'Utilisateur déja créé'}),500
-    # else:
-    #     return jsonify({'message': ''})
 
 
+#login route
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -108,9 +62,7 @@ def login():
         for elem in liste:
             user = elem['username']
             passw = elem['username']
-           
-            
-
+                       
         if user is None:
             error = 'Incorrect username.'
 
@@ -127,73 +79,28 @@ def login():
     return jsonify({'message': 'user connecter'})
 
 
-# @app.route('/user/<user_id>', methods=['GET','PUT'])
-# def update_user(user_id):
-#     data = request.get_json()
-#     email = data['email']
-#     password = data['password']
-#     cursor.execute('UPDATE users SET email = ?, password = ? WHERE username = ?', (email,generate_password_hash(password), user_id))
-#     conn.commit()
-#     return jsonify({'message': 'User updated successfully'})
-
-
-# @app.route('/user/<user_id>', methods=['DELETE'])
-# def delete_user(user_id):
-#     cursor.execute('DELETE FROM users WHERE username = ?', (user_id,))
-#     conn.commit()
-#     return jsonify({'message': 'User deleted successfully'})
-
-
-
 # #************************* Compte ************************************
 
-
-# GET films
+# GET specific user's info
 @app.route('/userinfo/<user_id>', methods=['GET'])
 def get_userinfo(user_id):
-        
-    # dbrequest = { 'username':user_id}
-    # liste = mycol.find(dbrequest)
-    # data = []
     mycol = mydb["users"]
     dbrequest = { 'username': user_id}
     liste = mycol.find(dbrequest)
-    # for elem in liste:
-    #     data.append({
-    #     'username': elem['username'],
-    #     'titreActif':elem['titreActif'],
-    #     'titreRestant': elem['titreRestant']
-    #     })
-        
 
     for elem in liste:
         data = {
         'username': elem['username']
-        # 'Bunit': elem['Bunit'],
-        # 'Bjour': elem['Bjour']
         }
-
 
     def count_billet_type(Type,username):
         mycol = mydb["billets"]
-        dbrequest = {'Type': {"$eq": Type}, 'username': username}
+        dbrequest = {'Type': {"$eq": Type}, 'username': username, 'isValid': 'true'}
         liste = mycol.find(dbrequest)
         count = 0
         for _ in liste:
             count += 1
         return count
-
-    
-
-
-    # mycol = mydb["billets"]
-    # dbrequest = {'Type': {"$eq":'Bunit'}, 'username':elem['username']}
-
-    # liste = mycol.find(dbrequest)
-
-    # count = 0
-    # for elem in liste:
-    #     count += 1
     
     data.update({'Bunit': count_billet_type('Bunit',elem['username']), 
                  'Bjour': count_billet_type('Bjour',elem['username'])})
@@ -201,33 +108,12 @@ def get_userinfo(user_id):
     return jsonify({'data': data})
     
 
-# requete = { 'username':'gui'}
-# liste = mycol.find(requete)
-
-
-# # GET film
-# @app.route('/film/<int:film_id>', methods=['GET'])
-# def get_film(film_id):
-#     cursor.execute('SELECT * FROM films WHERE id = ?', (film_id,))
-#     film = cursor.fetchone()
-
-#     if film:
-#         return jsonify({'film': film})
-#     else:
-#         return 'Film introuvable', 404
-    
- 
-
-
-# # Add Bunit
+# # Add billet
 @app.route('/addBillet', methods=['GET', 'POST'])
 def create_Billet():
 
     if request.method == 'POST':
         data = request.get_json()
-
-        # dateAchat= datetime.datetime.utcnow().strftime("%Y-%m-%d")
-
 
         dbrequest = {"username": data['username']}
     
@@ -244,10 +130,8 @@ def create_Billet():
             modif = { "$set" : {"Bunit": Bunit, "Bjour": Bjour}}
             mycol.update_one(dbrequest,modif)
         except Exception as e:
-            print()
-        
-
-  
+            print(e)
+          
         def create_and_generate_qr(mycol, data, Btype):
             dateAchat= datetime.datetime.utcnow().strftime("%Y-%m-%d")
             # Insérer un billet
@@ -278,212 +162,6 @@ def create_Billet():
         return jsonify({'message': 'Billet Unitaire Créer'}),201
     else:
         return jsonify({'message': 'Film deja existant'}),404
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Add film
-# @app.route('/addfilm', methods=['GET', 'POST'])
-# def create_film():
-
-#     if request.method == 'POST':
-#         data = request.get_json()
-#         id = data['id']
-#         headers = {
-#             "accept": "application/json",
-#             "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmM2I1NGViM2Q0ZTQyODVkZGUxODFmNGVjMzNjM2RmMyIsInN1YiI6IjY1OTAxMDc0NjRmNzE2NjVkNjhlYThiZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DGoyIxj4tfOLEbFjyFNZIUoKSLMPdNJGzyV4FpJtIGY"
-#         }
-
-#         url = "https://api.themoviedb.org/3/movie/" + id +"?language=fr-FR"
-#         response = requests.get(url, headers=headers)
-#         data = response.json()
-
-#         url2 = "https://api.themoviedb.org/3/movie/" + id + "/credits?language=fr-FR"
-#         response = requests.get(url2, headers=headers)
-#         data2 = response.json()
-
-#         titre=data['title']
-#         genre = data['genres'][0]['name']
-#         annee = data['release_date']
-#         affiche = "https://image.tmdb.org/t/p/w500" + data['poster_path']
-#         realisateur = data2['crew'][0]['name']
-#         acteur1 = data2['cast'][0]['name']
-#         acteur2 = data2['cast'][1]['name']
-#         acteur3 = data2['cast'][2]['name']
-
-                
-#         cursor.execute('SELECT films.titre FROM films WHERE titre = ?',(titre,))
-#         titredb = cursor.fetchone()
-#         if titredb == None:
-#             titredb = ''
-#         else:
-#             titredb = titredb[0]
-               
-#         if titre != titredb:
-#             cursor.execute('INSERT INTO films (titre, genre, annee, realisateur, affiche, acteur1, acteur2, acteur3) VALUES (?, ?, ?, ?,?,?,?,?)', (titre, genre, annee, realisateur, affiche, acteur1, acteur2, acteur3 ))
-#             conn.commit()
-        
-#             return jsonify({'message': 'Film created successfully'}),201
-#         else:
-#             return jsonify({'message': 'Film deja existant'}),404
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# @app.route('/film/<int:film_id>', methods=['GET','PUT'])
-# def update_film(film_id):
-#     data = request.get_json()
-#     genre = data['genre']
-#     annee = data['annee']
-#     realisateur = data['realisateur']
-#     affiche = data['affiche']
-#     cursor.execute('UPDATE films SET genre = ?, annee = ?, realisateur = ?, affiche = ? WHERE id = ? ', (genre, annee, realisateur, affiche, film_id))
-#     conn.commit()
-
-#     return jsonify({'message': 'Film updated successfully'})
-
-
-# @app.route('/film/<int:film_id>', methods=['DELETE'])
-# def delete_film(film_id):
-#     cursor.execute('DELETE FROM films WHERE id = ?', (film_id,))
-#     conn.commit()
-#     return jsonify({'message': 'Film deleted successfully'})
-
-
-
-# # Search films
-# @app.route('/search', methods=['GET', 'POST'])
-# def search_film():
-#     if request.method == 'POST':
-#         data = request.get_json()
-#         titre = data['titre']
-
-#         url = f'https://api.themoviedb.org/3/search/movie?query={titre}&include_adult=false&language=fr-FR&page=1'
-
-#         headers = {
-#             "accept": "application/json",
-#             "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmM2I1NGViM2Q0ZTQyODVkZGUxODFmNGVjMzNjM2RmMyIsInN1YiI6IjY1OTAxMDc0NjRmNzE2NjVkNjhlYThiZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DGoyIxj4tfOLEbFjyFNZIUoKSLMPdNJGzyV4FpJtIGY"
-#         }
-
-#         response = requests.get(url, headers=headers)
-
-#         data = response.json()
-         
-#         return jsonify(data = data["results"])
-    
-#     return jsonify({'message': 'Film inexistant'}),404
-
-
-# #*************************  USER FILMS  ******************************************
-
-# # GET userfilms
-# @app.route('/<user_id>/films', methods=['GET'])
-# def get_userfilms(user_id):
-#     cursor.execute('SELECT * from films INNER JOIN userfilms ON userfilms.film_id = films.titre WHERE userfilms.user_id = ? ORDER BY "titre"', (user_id,))
-#     films = cursor.fetchall()
-#     return jsonify({'films': films})
-
-
-# # GET userfilm
-# @app.route('/<user_id>/film/<int:film_id>', methods=['GET'])
-# def get_userfilm(user_id,film_id):
-#     cursor.execute('SELECT * from films INNER JOIN userfilms ON userfilms.film_id = films.titre WHERE userfilms.id = ?', (film_id,))
-#     films = cursor.fetchall()
-#     return jsonify({'films': films})
-
-
-# # Add user film
-# @app.route('/<user_id>/addfilm', methods=['GET', 'POST'])
-# def create_userfilm(user_id):
-
-#     if request.method == 'POST':
-#         data = request.get_json()
-#         id = data['id']
-
-#         headers = {
-#             "accept": "application/json",
-#             "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmM2I1NGViM2Q0ZTQyODVkZGUxODFmNGVjMzNjM2RmMyIsInN1YiI6IjY1OTAxMDc0NjRmNzE2NjVkNjhlYThiZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DGoyIxj4tfOLEbFjyFNZIUoKSLMPdNJGzyV4FpJtIGY"
-#         }
-
-#         url = "https://api.themoviedb.org/3/movie/" + id +"?language=fr-FR"
-#         response = requests.get(url, headers=headers)
-#         data = response.json()
-
-#         url2 = "https://api.themoviedb.org/3/movie/" + id + "/credits?language=fr-FR"
-#         response = requests.get(url2, headers=headers)
-#         data2 = response.json()
-
-#         titre=data['title']
-#         genre = data['genres'][0]['name']
-#         annee = data['release_date']
-#         affiche = "https://image.tmdb.org/t/p/w500" + data['poster_path']
-#         realisateur = data2['crew'][0]['name']
-#         acteur1 = data2['cast'][0]['name']
-#         acteur2 = data2['cast'][1]['name']
-#         acteur3 = data2['cast'][2]['name']
-
-#         cursor.execute('SELECT userfilms.film_id FROM userfilms WHERE user_id = ?',(user_id,))
-#         film_id= cursor.fetchall()
-
-#         for i in film_id:
-#             if titre == i[0]:
-#                 film_id = i[0]
-#                 break
-            
-#         cursor.execute('SELECT films.titre FROM films WHERE titre = ?',(titre,))
-#         titredb = cursor.fetchone()
-#         if titredb == None:
-#             titredb = ''
-#         else:
-#             titredb = titredb[0]
-       
-#         if titre != film_id:
-#             cursor.execute('INSERT INTO userfilms (user_id, film_id) VALUES (?, ?)', (user_id,titre))
-#             conn.commit()
-        
-#         if titre != titredb:
-#             cursor.execute('INSERT INTO films (titre, genre, annee, realisateur, affiche, acteur1, acteur2, acteur3) VALUES (?, ?, ?, ?,?,?,?,?)', (titre, genre, annee, realisateur, affiche, acteur1, acteur2, acteur3 ))
-#             conn.commit()
-        
-#         return jsonify({'message': 'Film created successfully'}),201
-#     else:
-#         return jsonify({'message': 'Film deja existant'}),404
-
-
-# # DELETE userfilm
-# @app.route('/<user_id>/film/<int:film_id>', methods=['DELETE'])
-# def delete_userfilm(user_id,film_id):
-
-#     cursor.execute('DELETE FROM userfilms WHERE  user_id = ? AND id = ?', (user_id,film_id))
-#     conn.commit()
-
-#     return jsonify({'message': 'Film deleted successfully'})
-
-
 
 
 if __name__ == '__main__':

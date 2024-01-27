@@ -2,3 +2,4 @@ mosquitto.db
 mosquitto.log
 **/__pycache__/  
 !**/__pycache__/
+BilletQR/

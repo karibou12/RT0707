@@ -246,7 +246,7 @@ ul {
 
 }
 
-.films {
+.billet {
     margin-left: auto;
     margin-right: auto;
     max-width: 900px;
@@ -296,65 +296,7 @@ ul {
 
 }
 
-/* .card { */
-    /* display: flex;
-    width: 200px;
-} */
 
-
-.film {
-    margin: auto;
-    display: flex;
-    max-width: 900px;
-    color: #333;
-    justify-content: center;
-    margin-top: 30px;
-    img {
-        width: 250px;
-    }
-
-    ul {
-        margin-top: 100px;
-        width: 300px;
-        display: block;
-        /* background-color: #35a3d6;; */
-        height: 200px;
-        margin-left: 5px;
-    }
-    li{
-        background-color: #35a3d6;
-        
-    }
-
-}
-
-.search {
-    max-width: 900px;
-    display: flex;
-    flex-wrap: wrap;
-    margin: auto;
-
-
-    .resultat {
-        margin-left: auto;
-        margin-right: auto;
-        width: 350px;
-        display: flex;
-
-        ul {
-            width: auto;
-            display: flex;
-
-            img {
-                height: 200px;
-            }
-        }
-
-    }
-
-
-
-}
 
 .message{
     text-align: center;
