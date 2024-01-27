@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>QR Code Scanner</h1>
+
+  
+    {%  for qr in files %}
+
+
+    <form method="post" action="{{ url_for('decode_qr', qr=qr) }}">
+       
+        <img src="{{url_for('get_image',  filename=qr) }}">
+        
+        <label for="qr">{{ qr }}</label>
+        <input type="submit" value="Submit">
+    </form>
+
+    {% endfor %}
+
+  
+</body>
+</html>

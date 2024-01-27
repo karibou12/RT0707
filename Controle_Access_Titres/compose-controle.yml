@@ -1,0 +1,93 @@
+version: '3'
+
+services:
+
+  srv-controle:
+    image: srv-controle:0.1
+    build:       
+      context: .
+      dockerfile: ./dockerfile-srv-controle
+    networks:
+      achat_titres_mynetwork:
+        ipv4_address: 172.20.0.8
+    ports:
+      - "5004:5000"
+    volumes:
+      - ./srv-controle:/app
+    expose:
+      - "5000"
+
+  api:
+    image: api:0.1
+    build: 
+      context: .
+      dockerfile: ./dockerfile-api-controle
+    networks:
+      achat_titres_mynetwork:
+        ipv4_address: 172.20.0.9
+    ports:
+      - "5005:5000"
+    volumes:
+      - ./api:/app
+      - ./data:/app/data
+    expose:
+      - "5000"
+
+  # serveur-mosquitto:
+  #   image: serveur-mosquitto:0.1
+  #   build:       
+  #     context: .
+  #     dockerfile: ./dockerfile-mosquitto
+  #   networks:
+  #     achat_titres_mynetwork:
+  #       ipv4_address: 172.20.0.10
+  #   ports:
+  #     - "1883:1883"
+  #     - "5006:5000"
+  #   volumes:
+  #     - ./serveur:/app
+  #   expose:
+  #     - "1883"
+  #     - "5000"
+
+#### ok ####
+  mosquitto:
+    image: eclipse-mosquitto
+    hostname: mosquitto
+    container_name: mosquitto
+    restart: unless-stopped
+    networks:
+      achat_titres_mynetwork:
+        ipv4_address: 172.20.0.10
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto:/etc/mosquitto
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    expose:
+      - "1883"
+      - "9001"
+
+
+#### ok ####
+  scanner-qrcode:
+    image: scanner-qrcode:0.1
+    build:       
+      context: .
+      dockerfile: ./dockerfile-scanner-qrcode
+    networks:
+      achat_titres_mynetwork:
+        ipv4_address: 172.20.0.11
+    ports:
+      - "5007:5000"
+    volumes:
+      - ./scanner-qrcode:/app
+      -  ./../BilletQR:/app/data
+    expose:
+      - "5000"
+
+networks:
+  achat_titres_mynetwork:
+    external: true
+
