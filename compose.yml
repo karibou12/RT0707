@@ -9,7 +9,7 @@ services:
       mynetwork:
         ipv4_address: 172.20.0.6
     ports:
-      - "5002:5000"
+      - "5000:5000"
     volumes:
       - ./serveur:/app
     expose:
@@ -24,7 +24,7 @@ services:
       mynetwork:
         ipv4_address: 172.20.0.7
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - ./api:/app
 

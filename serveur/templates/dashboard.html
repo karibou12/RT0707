@@ -1,17 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<!-- <nav class="header">
-
-    <a href="">Ajouter un film</a>
-</nav> -->
 
 {% endblock %}
 
 
 {% block content %}
 
-<section class="films">
+<section class="dash">
     
     <ul>
         <li class="card">
@@ -29,12 +25,11 @@
 </form>
 
 <script>
-    // Fonction pour recharger la page toutes les 5 secondes
+    // Reload page every 10s
     function reloadPage() {
-        location.reload(true); // Le paramètre true force le rechargement depuis le serveur, en ignorant le cache
+        location.reload(true);
     }
-    
-    // Appel à la fonction reloadPage toutes les 5 secondes (5000 millisecondes)
+  
     setInterval(reloadPage, 10000);
 </script>
     {% endblock %}

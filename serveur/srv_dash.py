@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = 'dashboardSecret'
 urlApi = 'http://172.20.0.7:5000'
 
 
-# Fonction pour vérifier et décoder le token JWT
+# verify token
 def verify_token(token):
     try:
         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
@@ -22,7 +22,7 @@ def verify_token(token):
         return None  # Le token est invalide
 
 
-# Ajoute a la variable g.user le nom de la session
+# Add g.user to session
 @app.before_request
 def load_logged_in_user():
     user_id = session.get('user_id')
@@ -36,7 +36,7 @@ def load_logged_in_user():
     else:
         g.user =None
 
-# Ajoute une fonction necessitant d'être logué
+# Add login decoration
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -54,7 +54,7 @@ def index():
 
 
 #*****************USER****************************
-
+#login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
