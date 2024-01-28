@@ -1,0 +1,276 @@
+/* static/styles.css */
+* {
+    margin: 0;
+    padding: 0;
+
+}
+
+
+html{
+    max-width: 100%;
+    height: 100%;
+    /* background-image: url('back1.jpg'); */
+    background-size: cover;
+    background-position: center;
+    background-repeat:repeat-y
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    color: #35a3d6;;
+    
+    
+
+}
+
+header {
+    color: #35a3d6;;
+    position: top;
+    display: flex;
+    width: 100%;
+    height: 60px;
+    vertical-align: middle;
+}
+
+.content {
+    margin-top: 20px;
+
+
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    max-width: 400px;
+    height: auto;
+    text-align: center;
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
+
+.titre {
+    width: 300px;
+    margin-left: 50px;
+    height: 100%;
+}
+
+nav {
+    margin-top: 20px;
+    display: flex;
+    margin-left: 60px;
+    color: #35a3d6;;
+
+
+    div {
+
+        width: 120px;
+        align-items: center;
+
+    }
+
+    .bobine {
+        width: 100%;
+        margin-left: 20px;
+        margin-top: 5px;
+
+
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        width: 100%;
+        text-align: center;
+        color: #272323;
+
+
+        li {
+            margin-left: auto;
+            margin-right: 50px;
+            background-color: #f2f2f2d5;
+            height: 10px;
+            width: 150px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: #000000;  
+            font-weight:600;
+        }
+
+        li:hover {
+            vertical-align: middle;
+            background-color: #f2f2f27c;
+            font-weight: bold;
+        }
+    
+    }
+}
+
+
+
+.btn{
+    width: 120px;
+
+}
+
+li.nohover:hover{
+    background-color: #35a3d6;;
+    font-size: 1em;
+    font-weight: normal;
+}
+
+a {
+    color: #35a3d6;;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+section {
+
+    margin-top: 80px;
+    margin-left: 20px;
+}
+
+.retour {
+
+    margin-right: 20px;
+    width: 300px;
+    text-align: right;
+}
+
+h2 {
+    text-align: center;
+    color: #35a3d6;;
+}
+
+h1 {
+    text-align: center;
+    color: #35a3d6;;
+    width: 100%;
+}
+
+
+form {
+    max-width: 150px;
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    border: 1px solid;
+    border-radius: 5px;
+
+}
+
+button {
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #457fa0;
+}
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    width: 300px;
+
+
+    li {
+        background-color: #f2f2f2d5;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #272323;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: #35a3d6;;
+    }
+
+}
+
+.dash {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 900px;
+
+    ul {
+        width: auto;
+        flex-wrap: wrap;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    h1{
+        text-align: center;
+    }
+    .imgfilm {
+        width: 200px;
+        transition: all 200ms;
+    }
+
+    li {
+        color: #272323;
+
+    }
+
+    .imgfilm:hover {
+        scale: 1.1;
+    }
+
+    form {
+        text-align: center;
+
+        .btn-supp {
+            background-color: #259dd4;;
+            color: #272323;
+            width: 250px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: 200ms;
+        &:hover{
+            color: red;
+            font-size: 1.1em ;
+          
+        }
+        }
+        
+    }
+
+}

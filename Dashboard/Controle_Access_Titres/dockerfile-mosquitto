@@ -1,0 +1,11 @@
+# Utiliser l'image officielle de Mosquitto depuis Docker Hub
+FROM eclipse-mosquitto
+
+# Copier le fichier de configuration local dans le conteneur
+COPY ./svr-mosquitto/mosquitto.conf /mosquitto/config/mosquitto.conf
+
+# Exposer les ports MQTT et l'interface de gestion Web
+EXPOSE 1883 9001
+
+# Commande pour démarrer Mosquitto lors du lancement du conteneur
+CMD ["mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
