@@ -1,0 +1,39 @@
+services:
+
+  serveur:
+    image: serveur:0.1
+    build:       
+      context: .
+      dockerfile: ./dockerfile-srv-achat
+    networks:
+      mynetwork:
+        ipv4_address: 172.20.0.4
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./serveur:/app
+    expose:
+      - "5000"
+
+  api:
+    image: api:0.1
+    build: 
+      context: .
+      dockerfile: ./dockerfile-api-achat
+    networks:
+      mynetwork:
+        ipv4_address: 172.20.0.5
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./api:/app
+      - ./../BilletQR:/app/data
+    expose:
+      - "5000"
+
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
