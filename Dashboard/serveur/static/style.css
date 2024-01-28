@@ -161,7 +161,6 @@ h1 {
     width: 100%;
 }
 
-
 form {
     max-width: 150px;
     margin: auto;
@@ -169,7 +168,6 @@ form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
 }
 
 label {
@@ -184,7 +182,6 @@ input {
     box-sizing: border-box;
     border: 1px solid;
     border-radius: 5px;
-
 }
 
 button {
@@ -199,12 +196,10 @@ button:hover {
     background-color: #457fa0;
 }
 
-
 ul {
     list-style-type: none;
     padding: 0;
     width: 300px;
-
 
     li {
         background-color: #f2f2f2d5;
@@ -267,8 +262,7 @@ ul {
         &:hover{
             color: red;
             font-size: 1.1em ;
-          
-        }
+            }
         }
         
     }
